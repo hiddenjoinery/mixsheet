@@ -16,3 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pure project aggregator: per-component, per-material, and project-level totals with source attribution.
 - Purchase optimizer (`mixsheet.domain.optimizer`): pure `optimize_purchase(breakdown, catalog, *, strategy, overage_pct, excluded_materials) -> PurchaseList` with multi-package and cross-supplier allocations, three strategies (`cheapest`, `minimal_waste`, `bulk_value`), overage applied before package selection, supplier subtotals, deterministic tie-breaking, `UnpurchasableMaterialError` for missing packages, and `CatalogTooBroadError` as a defensive search-space guard.
 - Excel export of purchase list and mix sheets via optional `export` extra (`mixsheet.export`): pure `write_purchase_workbook` and `write_mixsheet_workbook` writers, per-component mix-sheet renderer (`render_component_mixsheet`), per-material rolled-up `PurchaseListView.materials` for the Overview tab, lazy `xlsxwriter` import with focused install hint.
+- Interactive wizard (`mixsheet.wizard`): `mixsheet new` and `mixsheet open` commands wrapping the full pipeline (volume input → preset pick → calculate → strategy comparison → optimize → render → export), save-after-each-prompt persistence, `--no-compare` and `--project-dir` options, inline `?`-help on every prompt, and remediations for unknown presets on load and unpurchasable materials.
+
+### Removed
+
+- Placeholder `mixsheet calc` command (replaced by `mixsheet new`).

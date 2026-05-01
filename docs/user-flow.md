@@ -129,7 +129,7 @@ $ mixsheet new
 ? Project shape: › Single component
                    Machine (multiple components)
 
-— Project saved as ./projects/lathe-bed-riser-2026-05-01.yaml —
+— Project saved as ./projects/lathe-bed-riser.yaml —
 
 ? Component name: riser
 ? How do you know the volume?
@@ -194,9 +194,9 @@ $ mixsheet new
 
 — Project saved —
 
-  Mix sheet:     ./projects/lathe-bed-riser-2026-05-01.mixsheets.xlsx
-  Purchase list: ./projects/lathe-bed-riser-2026-05-01.purchase.xlsx
-  Project file:  ./projects/lathe-bed-riser-2026-05-01.yaml
+  Mix sheet:     ./projects/lathe-bed-riser.mixsheets.xlsx
+  Purchase list: ./projects/lathe-bed-riser.purchase.xlsx
+  Project file:  ./projects/lathe-bed-riser.yaml
 ```
 
 ## Golden path — machine project
@@ -237,9 +237,9 @@ $ mixsheet new
 ... (same comparison + purchase list as single-component, but combined) ...
 
 — Project saved —
-  Mix sheets:    ./projects/router-gantry-2026-05/mixsheets.xlsx
-  Purchase list: ./projects/router-gantry-2026-05/purchase.xlsx
-  Project file:  ./projects/router-gantry-2026-05/project.yaml
+  Mix sheets:    ./projects/router-gantry/mixsheets.xlsx
+  Purchase list: ./projects/router-gantry/purchase.xlsx
+  Project file:  ./projects/router-gantry/project.yaml
 ```
 
 For machines: one folder per project. One mix sheet per component, one
@@ -252,7 +252,7 @@ exclusive state — every prompt's answer is written to disk before the
 next prompt.
 
 ```
-$ mixsheet open ./projects/router-gantry-2026-05/project.yaml
+$ mixsheet open ./projects/router-gantry/project.yaml
 
 — Loaded: Router gantry (machine, 2 components) —
 

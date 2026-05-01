@@ -50,11 +50,16 @@ phases extend it without rewriting earlier work.
 - Per-component mix sheets formatted for print
 - See [`openspec/changes/add-excel-export/`](../openspec/changes/add-excel-export/)
 
-## Phase 6 — Interactive wizard
+## Phase 6 — Interactive wizard ✅
 
-- Typer + Rich prompts mirroring the four-step flow:
-  dimensions → calculate → machine → purchase
-- Resumable sessions saved as JSON snapshots
+- `mixsheet new` and `mixsheet open` (Typer + Rich) mirror the four-step
+  flow: dimensions → calculate → machine → purchase
+- Save-after-each-prompt: project YAML on disk leads, in-memory state
+  follows; resumable via `mixsheet open <path>`
+- Strategy comparison (default on, `--no-compare` to skip), inline `?`
+  help blurbs, remediation prompts for unknown presets and
+  unpurchasable materials
+- See [`openspec/changes/add-cli-wizard/`](../openspec/changes/add-cli-wizard/)
 
 ## Future
 
