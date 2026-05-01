@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial project scaffold: src-layout Python package, Typer CLI entry point, OpenSpec workspace, pre-commit hooks, and pytest harness.
+- User flow documentation (`docs/user-flow.md`): project model, volume input modes, single project-level overage, strategy comparison, resumable wizard, help and discoverability layers, catalog cleanup vs old implementation.
