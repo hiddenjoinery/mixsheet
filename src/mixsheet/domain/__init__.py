@@ -1,7 +1,7 @@
 """Public domain model surface for The Mix Sheet.
 
 Importing from ``mixsheet.domain`` is the supported way to reach the
-catalog, project, calculator, aggregator, strategy, and
+catalog, project, calculator, aggregator, optimizer, strategy, and
 display-precision types. Submodules remain importable but are
 considered internal.
 """
@@ -38,6 +38,15 @@ from mixsheet.domain.display import (
     QUANTITY_DECIMALS_LOW,
     QUANTITY_THRESHOLD,
 )
+from mixsheet.domain.optimizer import (
+    CatalogTooBroadError,
+    PurchaseAllocation,
+    PurchaseLineItem,
+    PurchaseList,
+    SupplierSubtotal,
+    UnpurchasableMaterialError,
+    optimize_purchase,
+)
 from mixsheet.domain.project import (
     AreaHeightVolume,
     CatalogVersionMismatch,
@@ -66,6 +75,7 @@ __all__ = [
     "AreaHeightVolume",
     "Catalog",
     "CatalogError",
+    "CatalogTooBroadError",
     "CatalogVersionMismatch",
     "Component",
     "ComponentBreakdown",
@@ -79,11 +89,16 @@ __all__ = [
     "ProjectBreakdown",
     "ProjectFileError",
     "ProjectLoadResult",
+    "PurchaseAllocation",
     "PurchaseConfig",
+    "PurchaseLineItem",
+    "PurchaseList",
     "Strategy",
     "Supplier",
     "SupplierPackage",
+    "SupplierSubtotal",
     "UnknownPresetError",
+    "UnpurchasableMaterialError",
     "Volume",
     "aggregate_project",
     "calculate_component",
@@ -91,5 +106,6 @@ __all__ = [
     "load_catalog",
     "load_project",
     "new_project",
+    "optimize_purchase",
     "save_project",
 ]

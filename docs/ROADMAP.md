@@ -25,11 +25,14 @@ phases extend it without rewriting earlier work.
   per-component breakdowns into project-wide volume, weight, and
   per-material totals with source attribution.
 
-## Phase 3 — Purchase optimization
+## Phase 3 — Purchase optimization ✅
 
-- Supplier-aware package selection per material
+- Supplier-aware package selection per material (multi-package,
+  cross-supplier allowed)
 - Three strategies: cheapest, bulk-value, minimal-waste
-- Waste, overage and cost reporting per line
+- Waste, overage and cost reporting per line, plus per-supplier
+  subtotals and grand totals
+- See [`openspec/changes/add-purchase-optimization/`](../openspec/changes/add-purchase-optimization/)
 
 ## Phase 4 — Export
 
