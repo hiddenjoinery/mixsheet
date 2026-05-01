@@ -5,8 +5,6 @@ for concrete and UHPC mixes, distributed as a Python CLI. Calculates
 material requirements, optimizes packaging, minimizes waste and provides
 cost insight.
 
-**Tagline:** "Know what you need before you pour."
-
 ## Documentation
 
 Start in [`docs/README.md`](docs/README.md) — index over:
@@ -73,8 +71,3 @@ This repo uses **OpenSpec** for capability specs and changes. See
 - Skills `openspec-propose`, `openspec-apply-change`,
   `openspec-archive-change`, and `openspec-explore` are available under
   `.claude/skills/`.
-
-## Voice
-
-User-facing CLI copy follows the **Corbin** voice (refer to the
-`hj-corbin` skill). Anonymous, instrumental, never marketing-flavoured.
