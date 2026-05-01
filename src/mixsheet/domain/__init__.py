@@ -7,6 +7,12 @@ remain importable but are considered internal.
 
 from __future__ import annotations
 
+from mixsheet.domain.calculator import (
+    ComponentBreakdown,
+    MaterialBreakdownRow,
+    UnknownPresetError,
+    calculate_component,
+)
 from mixsheet.domain.catalog import (
     Catalog,
     CatalogError,
@@ -53,9 +59,11 @@ __all__ = [
     "CatalogError",
     "CatalogVersionMismatch",
     "Component",
+    "ComponentBreakdown",
     "DimensionsVolume",
     "DirectVolume",
     "Material",
+    "MaterialBreakdownRow",
     "MaterialProportion",
     "MixPreset",
     "Project",
@@ -65,7 +73,9 @@ __all__ = [
     "Strategy",
     "Supplier",
     "SupplierPackage",
+    "UnknownPresetError",
     "Volume",
+    "calculate_component",
     "load_bundled_catalog",
     "load_catalog",
     "load_project",
