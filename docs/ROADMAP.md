@@ -19,10 +19,11 @@ phases extend it without rewriting earlier work.
   above; prices 2 decimals; percentages 0 decimals
 - Unit tests against known-good fixtures from the prior backend
 
-## Phase 2 — Multi-component aggregation
+## Phase 2 — Multi-component aggregation ✅
 
-- Machine builder: name, list of components, global overage percentage
-- Aggregated material totals across components
+- Pure `aggregate_project(project, catalog) -> ProjectBreakdown` summing
+  per-component breakdowns into project-wide volume, weight, and
+  per-material totals with source attribution.
 
 ## Phase 3 — Purchase optimization
 

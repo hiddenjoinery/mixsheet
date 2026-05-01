@@ -1,12 +1,19 @@
 """Public domain model surface for The Mix Sheet.
 
 Importing from ``mixsheet.domain`` is the supported way to reach the
-catalog, project, strategy, and display-precision types. Submodules
-remain importable but are considered internal.
+catalog, project, calculator, aggregator, strategy, and
+display-precision types. Submodules remain importable but are
+considered internal.
 """
 
 from __future__ import annotations
 
+from mixsheet.domain.aggregator import (
+    AggregatedMaterial,
+    AggregatedMaterialSource,
+    ProjectBreakdown,
+    aggregate_project,
+)
 from mixsheet.domain.calculator import (
     ComponentBreakdown,
     MaterialBreakdownRow,
@@ -54,6 +61,8 @@ __all__ = [
     "QUANTITY_DECIMALS_HIGH",
     "QUANTITY_DECIMALS_LOW",
     "QUANTITY_THRESHOLD",
+    "AggregatedMaterial",
+    "AggregatedMaterialSource",
     "AreaHeightVolume",
     "Catalog",
     "CatalogError",
@@ -67,6 +76,7 @@ __all__ = [
     "MaterialProportion",
     "MixPreset",
     "Project",
+    "ProjectBreakdown",
     "ProjectFileError",
     "ProjectLoadResult",
     "PurchaseConfig",
@@ -75,6 +85,7 @@ __all__ = [
     "SupplierPackage",
     "UnknownPresetError",
     "Volume",
+    "aggregate_project",
     "calculate_component",
     "load_bundled_catalog",
     "load_catalog",
