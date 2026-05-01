@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+wheels/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Claude Code — personal tool-permission overrides
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+**/.claude/settings.local.json
+
+# MCP — local server config carries dev credentials, never commit
+.mcp.json
+
+# Temporary
+.scratch/
+.worktrees/
+
+# Mix Sheet runtime output
+out/
+*.xlsx
+!docs/**/*.xlsx

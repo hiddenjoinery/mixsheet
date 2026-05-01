@@ -1,0 +1,30 @@
+schema: spec-driven
+
+context: |
+  The Mix Sheet is a Python 3.14+ CLI that calculates material
+  requirements for concrete and UHPC mixes, optimizes supplier package
+  selection, and exports purchase lists and per-component mix sheets.
+
+  The product is delivered as a single CLI (Typer + Rich). It is not an
+  HTTP service and ships no frontend. Mix presets and supplier packages
+  live in declarative YAML catalogs validated at startup.
+
+  Chat with the user is in Dutch. Repository artifacts are English.
+  OpenSpec change folders must start with a letter; use kebab-case
+  capability names.
+
+rules:
+  proposal:
+    - Keep proposals under 800 words unless cross-cutting scope requires more.
+    - Include explicit non-goals for UX and data-model changes.
+    - Name affected capabilities using kebab-case.
+  specs:
+    - Requirements describe observable contracts, not class or function names.
+    - Every requirement has at least one testable scenario.
+    - Use SHALL or MUST for hard contracts.
+  design:
+    - Capture architecture decisions and tradeoffs; keep implementation checklists in tasks.md.
+    - Call out catalog ownership, file-format compatibility, and CLI surface impact.
+  tasks:
+    - Keep tasks small enough for one focused implementation session.
+    - Include validation tasks for CLI behaviour, tests, and OpenSpec validation.

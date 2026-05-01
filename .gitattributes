@@ -1,0 +1,2 @@
+# Force LF everywhere, including working copy
+* text=auto eol=lf
