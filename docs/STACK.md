@@ -18,7 +18,11 @@ authoritative for installed versions.
 | typer | CLI command tree |
 | rich | Terminal UI: prompts, tables, progress |
 | structlog | Structured JSON logging to stderr |
-| pyyaml | Catalog files (mix presets, supplier packages) |
+| pyyaml | Catalog files (mix presets, supplier packages); also project I/O |
+
+The bundled material catalog (`presets.yaml`, `suppliers.yaml`) ships
+inside the wheel under `mixsheet.data` and is read via
+`importlib.resources` — no filesystem hunting at runtime.
 
 ## Development tooling
 

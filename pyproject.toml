@@ -25,6 +25,8 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mixsheet"]
+# Bundled YAML catalogs under src/mixsheet/data ship as package data via
+# the packages include above (hatchling copies non-.py files alongside).
 
 [dependency-groups]
 dev = [

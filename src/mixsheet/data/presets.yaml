@@ -1,0 +1,110 @@
+# Mix Sheet — Materials & Mix Presets catalog
+# All proportions are mass fractions and MUST sum to 1.0000 per preset.
+catalog_version: "2026-05-01"
+
+materials:
+  - id: aeropor
+    name: Aeropor light aggregate
+    category: aggregate
+
+  - id: durigid-0-1
+    name: Durigid 0-1 mm aggregate
+    category: aggregate
+
+  - id: durigid-1-3
+    name: Durigid 1-3 mm aggregate
+    category: aggregate
+
+  - id: durigid-3-6
+    name: Durigid 3-6 mm aggregate
+    category: aggregate
+
+  - id: epoxy-resin
+    name: Epoxy resin
+    category: binder
+
+  - id: hardener-gl2
+    name: Hardener GL2
+    category: additive
+
+  - id: cement
+    name: Cement / Nanodur
+    category: binder
+
+  - id: pce-375
+    name: PCE 375 superplasticizer
+    category: additive
+
+  - id: water
+    name: Water
+    category: liquid
+    default_excluded: true
+
+presets:
+  - id: epoxy-mix
+    name: Epoxy granite
+    version: "1.1.0"
+    density_kg_per_l: 1.91
+    description: Dense mineral-resin composite with strong damping and low shrinkage.
+    application: Machine bases, Bed castings, Static frames, High damping
+    materials:
+      - material_id: aeropor
+        proportion: 0.0792
+      - material_id: durigid-0-1
+        proportion: 0.2772
+      - material_id: durigid-1-3
+        proportion: 0.2972
+      - material_id: durigid-3-6
+        proportion: 0.2182
+      - material_id: epoxy-resin
+        proportion: 0.0986
+      - material_id: hardener-gl2
+        proportion: 0.0296
+
+  - id: gantry-beam-dynamic-fill
+    name: Lightweight gantry fill
+    version: "1.0.0"
+    density_kg_per_l: 0.88
+    description: Low-density aggregate blend that reduces mass while maintaining stiffness.
+    application: Gantry beams, Cross slides, Moving carriages, Low mass
+    materials:
+      - material_id: aeropor
+        proportion: 0.4266
+      - material_id: durigid-1-3
+        proportion: 0.2667
+      - material_id: durigid-3-6
+        proportion: 0.1334
+      - material_id: epoxy-resin
+        proportion: 0.1333
+      - material_id: hardener-gl2
+        proportion: 0.0400
+
+  - id: uhpc-mix
+    name: Ultra-High Performance Concrete
+    version: "1.0.0"
+    density_kg_per_l: 2.78
+    description: Cement-based UHPC mix for parts that require very high strength, surface hardness, and dimensional stability.
+    application: Load-bearing parts, Base plates, Structural joints, High stiffness
+    materials:
+      - material_id: cement
+        proportion: 0.3698
+      - material_id: durigid-1-3
+        proportion: 0.4202
+      - material_id: durigid-3-6
+        proportion: 0.1515
+      - material_id: water
+        proportion: 0.0525
+      - material_id: pce-375
+        proportion: 0.0060
+
+  - id: pure-epoxy-low-volume
+    name: Pure epoxy
+    version: "1.0.0"
+    density_kg_per_l: 1.09
+    description: Resin-only mix for thin pours, leveling, and fine detail work.
+    application: Leveling layers, Bearing seats, Thin pours, < 0.5 L
+    materials:
+      - material_id: epoxy-resin
+        proportion: 0.7692
+      - material_id: hardener-gl2
+        proportion: 0.2308
