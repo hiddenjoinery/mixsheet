@@ -9,7 +9,7 @@ phases extend it without rewriting earlier work.
 - OpenSpec workspace, pre-commit hooks, pytest harness
 - Docs skeleton (charter, roadmap, stack)
 
-## Phase 1 — Domain core
+## Phase 1 — Domain core ✅
 
 - Pydantic models: `MixPreset`, `Component`, `SupplierPackage`,
   `Machine`, `PurchaseLine`
@@ -34,12 +34,23 @@ phases extend it without rewriting earlier work.
   subtotals and grand totals
 - See [`openspec/changes/add-purchase-optimization/`](../openspec/changes/add-purchase-optimization/)
 
-## Phase 4 — Export
+## Phase 4 — Purchase rendering ✅
+
+- Pure `render_purchase_list(purchase_list) -> PurchaseListView` regroups
+  the optimiser's output by supplier and decorates it with
+  display-rounded string fields drawn from `mixsheet.domain.display`
+- Frozen view models (raw `Decimal` plus formatted strings per cell)
+  feed the upcoming Rich CLI table and Excel export without further
+  reshaping
+- See [`openspec/changes/add-purchase-renderer/`](../openspec/changes/add-purchase-renderer/)
+
+## Phase 5 — Export ✅
 
 - Excel export of purchase list (xlsxwriter, optional dependency)
 - Per-component mix sheets formatted for print
+- See [`openspec/changes/add-excel-export/`](../openspec/changes/add-excel-export/)
 
-## Phase 5 — Interactive wizard
+## Phase 6 — Interactive wizard
 
 - Typer + Rich prompts mirroring the four-step flow:
   dimensions → calculate → machine → purchase

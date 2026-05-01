@@ -1,8 +1,8 @@
 """Public domain model surface for The Mix Sheet.
 
 Importing from ``mixsheet.domain`` is the supported way to reach the
-catalog, project, calculator, aggregator, optimizer, strategy, and
-display-precision types. Submodules remain importable but are
+catalog, project, calculator, aggregator, optimizer, renderer, strategy,
+and display-precision types. Submodules remain importable but are
 considered internal.
 """
 
@@ -38,6 +38,11 @@ from mixsheet.domain.display import (
     QUANTITY_DECIMALS_LOW,
     QUANTITY_THRESHOLD,
 )
+from mixsheet.domain.mixsheet_renderer import (
+    ComponentMixSheetView,
+    MixSheetMaterialRow,
+    render_component_mixsheet,
+)
 from mixsheet.domain.optimizer import (
     CatalogTooBroadError,
     PurchaseAllocation,
@@ -62,6 +67,14 @@ from mixsheet.domain.project import (
     new_project,
     save_project,
 )
+from mixsheet.domain.renderer import (
+    PurchaseAllocationView,
+    PurchaseLineItemSummaryView,
+    PurchaseLineItemView,
+    PurchaseListView,
+    SupplierGroupView,
+    render_purchase_list,
+)
 from mixsheet.domain.strategy import Strategy
 
 __all__ = [
@@ -79,22 +92,29 @@ __all__ = [
     "CatalogVersionMismatch",
     "Component",
     "ComponentBreakdown",
+    "ComponentMixSheetView",
     "DimensionsVolume",
     "DirectVolume",
     "Material",
     "MaterialBreakdownRow",
     "MaterialProportion",
     "MixPreset",
+    "MixSheetMaterialRow",
     "Project",
     "ProjectBreakdown",
     "ProjectFileError",
     "ProjectLoadResult",
     "PurchaseAllocation",
+    "PurchaseAllocationView",
     "PurchaseConfig",
     "PurchaseLineItem",
+    "PurchaseLineItemSummaryView",
+    "PurchaseLineItemView",
     "PurchaseList",
+    "PurchaseListView",
     "Strategy",
     "Supplier",
+    "SupplierGroupView",
     "SupplierPackage",
     "SupplierSubtotal",
     "UnknownPresetError",
@@ -107,5 +127,7 @@ __all__ = [
     "load_project",
     "new_project",
     "optimize_purchase",
+    "render_component_mixsheet",
+    "render_purchase_list",
     "save_project",
 ]

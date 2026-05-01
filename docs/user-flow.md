@@ -194,8 +194,8 @@ $ mixsheet new
 
 — Project saved —
 
-  Mix sheet:     ./projects/lathe-bed-riser-2026-05-01.mix.csv
-  Purchase list: ./projects/lathe-bed-riser-2026-05-01.purchase.csv
+  Mix sheet:     ./projects/lathe-bed-riser-2026-05-01.mixsheets.xlsx
+  Purchase list: ./projects/lathe-bed-riser-2026-05-01.purchase.xlsx
   Project file:  ./projects/lathe-bed-riser-2026-05-01.yaml
 ```
 
@@ -237,9 +237,8 @@ $ mixsheet new
 ... (same comparison + purchase list as single-component, but combined) ...
 
 — Project saved —
-  Mix sheets:    ./projects/router-gantry-2026-05/bed.mix.csv
-                 ./projects/router-gantry-2026-05/cross-slide.mix.csv
-  Purchase list: ./projects/router-gantry-2026-05/purchase.csv
+  Mix sheets:    ./projects/router-gantry-2026-05/mixsheets.xlsx
+  Purchase list: ./projects/router-gantry-2026-05/purchase.xlsx
   Project file:  ./projects/router-gantry-2026-05/project.yaml
 ```
 
@@ -378,7 +377,7 @@ of the CLI flow.
 | Topic | Decision |
 |-------|----------|
 | Project storage | `./projects/` relative to the current working directory. `--project-dir` flag overrides. No global state in `~/`. |
-| Export format | CSV is the floor (always available). `.xlsx` is the preferred export when xlsxwriter is installed; the CLI picks xlsx by default and falls back to CSV with a notice. |
+| Export format | `.xlsx` is the only export path. Install with `uv add mixsheet[export]` to enable the writer. |
 | Logging | Structlog JSON to a rotating log file under `./projects/.logs/` (or the configured project-dir). Only warnings and errors surface on stderr; the Rich wizard owns stdout. |
 | Preset version pinning | A project pins both `preset_id` **and** `preset_version` at save time. Reopening a project with a newer catalog version warns and offers to recalculate against the new preset or keep the pinned values. |
 
