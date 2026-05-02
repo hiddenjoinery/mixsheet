@@ -15,135 +15,197 @@ packages:
     supplier_id: moertelshop
     weight_kg: 21.0
     price_incl_vat: 84.10
+    product_url: https://www.moertelshop.com/buy-light-weight-aggregate-cheaply
 
   - id: durigid-0-1-5kg
     material_id: durigid-0-1
     supplier_id: moertelshop
     weight_kg: 5.0
     price_incl_vat: 17.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: durigid-0-1-25kg
     material_id: durigid-0-1
     supplier_id: moertelshop
     weight_kg: 25.0
     price_incl_vat: 52.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: durigid-1-3-5kg
     material_id: durigid-1-3
     supplier_id: moertelshop
     weight_kg: 5.0
     price_incl_vat: 17.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: durigid-1-3-25kg
     material_id: durigid-1-3
     supplier_id: moertelshop
     weight_kg: 25.0
     price_incl_vat: 52.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: durigid-3-6-5kg
     material_id: durigid-3-6
     supplier_id: moertelshop
     weight_kg: 5.0
     price_incl_vat: 17.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: durigid-3-6-25kg
     material_id: durigid-3-6
     supplier_id: moertelshop
     weight_kg: 25.0
     price_incl_vat: 52.40
+    product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
 
   - id: cement-5kg
     material_id: cement
     supplier_id: moertelshop
     weight_kg: 5.0
     price_incl_vat: 17.30
+    product_url: https://www.moertelshop.com/buy-nanodur-cement-cheaply_10
 
   - id: cement-25kg
     material_id: cement
     supplier_id: moertelshop
     weight_kg: 25.0
     price_incl_vat: 50.00
+    product_url: https://www.moertelshop.com/buy-nanodur-cement-cheaply_10
 
   - id: cement-300kg
     material_id: cement
     supplier_id: moertelshop
     weight_kg: 300.0
     price_incl_vat: 550.00
+    product_url: https://www.moertelshop.com/buy-nanodur-cement-cheaply_10
 
   - id: pce-375-0.5l
     material_id: pce-375
     supplier_id: moertelshop
     weight_kg: 0.55
     price_incl_vat: 17.60
+    product_url: https://www.moertelshop.com/buy-adva-flow-superplasticizer-type-375-cheaply_4
 
   - id: pce-375-2.5l
     material_id: pce-375
     supplier_id: moertelshop
     weight_kg: 2.75
     price_incl_vat: 59.90
+    product_url: https://www.moertelshop.com/buy-adva-flow-superplasticizer-type-375-cheaply_4
 
   - id: pce-375-10l
     material_id: pce-375
     supplier_id: moertelshop
     weight_kg: 11.0
     price_incl_vat: 194.30
+    product_url: https://www.moertelshop.com/buy-adva-flow-superplasticizer-type-375-cheaply_4
 
   - id: pce-375-20l
     material_id: pce-375
     supplier_id: moertelshop
     weight_kg: 22.0
     price_incl_vat: 348.00
+    product_url: https://www.moertelshop.com/buy-adva-flow-superplasticizer-type-375-cheaply_4
 
   - id: epoxy-resin-2.5kg
     material_id: epoxy-resin
     supplier_id: rg-faserverbund
     weight_kg: 2.5
     price_incl_vat: 43.11
+    product_url: https://www.r-g.de/en/art/100133
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
+      - min_quantity: 3
+        discount_pct: 0.10
 
   - id: epoxy-resin-5kg
     material_id: epoxy-resin
     supplier_id: rg-faserverbund
     weight_kg: 5.0
     price_incl_vat: 76.91
+    product_url: https://www.r-g.de/en/art/100133
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
+      - min_quantity: 3
+        discount_pct: 0.10
 
   - id: epoxy-resin-10kg
     material_id: epoxy-resin
     supplier_id: rg-faserverbund
     weight_kg: 10.0
     price_incl_vat: 149.94
+    product_url: https://www.r-g.de/en/art/100133
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
+      - min_quantity: 3
+        discount_pct: 0.10
 
   - id: epoxy-resin-25kg
     material_id: epoxy-resin
     supplier_id: rg-faserverbund
     weight_kg: 25.0
-    price_incl_vat: 341.21
+    price_incl_vat: 340.98
+    product_url: https://www.r-g.de/en/art/100133
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
+      - min_quantity: 3
+        discount_pct: 0.10
+      - min_quantity: 4
+        discount_pct: 0.15
 
   - id: hardener-gl2-0.75kg
     material_id: hardener-gl2
     supplier_id: rg-faserverbund
     weight_kg: 0.75
     price_incl_vat: 24.38
+    product_url: https://www.r-g.de/en/art/104100
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
 
   - id: hardener-gl2-1.5kg
     material_id: hardener-gl2
     supplier_id: rg-faserverbund
     weight_kg: 1.5
     price_incl_vat: 43.74
+    product_url: https://www.r-g.de/en/art/104100
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
 
   - id: hardener-gl2-3kg
     material_id: hardener-gl2
     supplier_id: rg-faserverbund
     weight_kg: 3.0
     price_incl_vat: 75.83
+    product_url: https://www.r-g.de/en/art/104100
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
 
   - id: hardener-gl2-7.5kg
     material_id: hardener-gl2
     supplier_id: rg-faserverbund
     weight_kg: 7.5
     price_incl_vat: 168.97
+    product_url: https://www.r-g.de/en/art/104100
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
 
   - id: hardener-gl2-20kg
     material_id: hardener-gl2
     supplier_id: rg-faserverbund
     weight_kg: 20.0
-    price_incl_vat: 404.97
+    price_incl_vat: 404.87
+    product_url: https://www.r-g.de/en/art/104100
+    bundle_discounts:
+      - min_quantity: 2
+        discount_pct: 0.05
+      - min_quantity: 4
+        discount_pct: 0.10

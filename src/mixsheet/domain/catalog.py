@@ -15,7 +15,7 @@ from importlib.resources import files
 from typing import TYPE_CHECKING, Any
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, ValidationError, model_validator
 
 from mixsheet.domain._yaml import safe_load_decimal
 
@@ -96,8 +96,22 @@ class Supplier(BaseModel):
     name: str = Field(min_length=1)
 
 
+class BundleDiscount(BaseModel):
+    """A staffel tier: a percentage discount that applies from N units up.
+
+    Tiers are interpreted as half-open ranges by ascending ``min_quantity``;
+    the highest matching tier wins (e.g. tiers at 2 and 4 mean 2-3 → first
+    tier, 4+ → second tier).
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    min_quantity: int = Field(ge=2)
+    discount_pct: Decimal = Field(gt=Decimal("0"), lt=Decimal("1"))
+
+
 class SupplierPackage(BaseModel):
-    """A purchasable SKU: weight and gross price for a single material."""
+    """A purchasable SKU: weight, gross price, and optional bundle staffel."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -106,11 +120,34 @@ class SupplierPackage(BaseModel):
     supplier_id: str = Field(min_length=1)
     weight_kg: Decimal = Field(gt=Decimal("0"))
     price_incl_vat: Decimal = Field(ge=Decimal("0"))
+    product_url: HttpUrl | None = None
+    bundle_discounts: list[BundleDiscount] = Field(default_factory=list)
 
     @property
     def price_per_kg(self) -> Decimal:
         """Return the gross unit price (€/kg) derived from price ÷ weight."""
         return self.price_incl_vat / self.weight_kg
+
+    @model_validator(mode="after")
+    def _bundle_discounts_strictly_increase(self) -> SupplierPackage:
+        previous_qty = 0
+        previous_pct = Decimal("0")
+        for tier in self.bundle_discounts:
+            if tier.min_quantity <= previous_qty:
+                msg = (
+                    f"package {self.id!r} bundle_discounts must list "
+                    f"min_quantity in strictly ascending order"
+                )
+                raise ValueError(msg)
+            if tier.discount_pct <= previous_pct:
+                msg = (
+                    f"package {self.id!r} bundle_discounts must list "
+                    f"discount_pct in strictly ascending order"
+                )
+                raise ValueError(msg)
+            previous_qty = tier.min_quantity
+            previous_pct = tier.discount_pct
+        return self
 
 
 class Catalog(BaseModel):

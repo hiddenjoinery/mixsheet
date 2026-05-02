@@ -71,3 +71,11 @@ This repo uses **OpenSpec** for capability specs and changes. See
 - Skills `openspec-propose`, `openspec-apply-change`,
   `openspec-archive-change`, and `openspec-explore` are available under
   `.claude/skills/`.
+
+## Catalog skills
+
+- `refresh-supplier-prices` (`.claude/skills/refresh-supplier-prices/`)
+  — verify and refresh list prices and bundle-discount tiers in
+  `src/mixsheet/data/suppliers.yaml` against the live supplier pages.
+  Dry-run by default; opt-in apply mode edits the YAML in place via
+  ruamel.yaml.

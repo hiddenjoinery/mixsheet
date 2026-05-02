@@ -8,6 +8,7 @@ import pytest
 from pydantic import ValidationError
 
 from mixsheet.domain import (
+    BundleDiscount,
     Material,
     MaterialProportion,
     MixPreset,
@@ -119,3 +120,74 @@ class TestSupplierAndPackage:
                 weight_kg=Decimal("1.0"),
                 price_incl_vat=Decimal("-0.01"),
             )
+
+    def test_loads_a_package_with_a_product_url_and_bundle_discounts(self) -> None:
+        package = SupplierPackage(
+            id="epoxy-resin-25kg",
+            material_id="epoxy-resin",
+            supplier_id="rg-faserverbund",
+            weight_kg=Decimal("25.0"),
+            price_incl_vat=Decimal("340.98"),
+            product_url="https://www.r-g.de/en/art/100133",  # type: ignore[arg-type]
+            bundle_discounts=[
+                BundleDiscount(min_quantity=2, discount_pct=Decimal("0.05")),
+                BundleDiscount(min_quantity=4, discount_pct=Decimal("0.15")),
+            ],
+        )
+        assert str(package.product_url) == "https://www.r-g.de/en/art/100133"
+        assert len(package.bundle_discounts) == 2
+
+    def test_rejects_a_malformed_product_url(self) -> None:
+        with pytest.raises(ValidationError):
+            SupplierPackage.model_validate(
+                {
+                    "id": "p",
+                    "material_id": "x",
+                    "supplier_id": "y",
+                    "weight_kg": Decimal("1.0"),
+                    "price_incl_vat": Decimal("1.0"),
+                    "product_url": "not-a-url",
+                },
+            )
+
+    def test_rejects_bundle_tiers_with_descending_min_quantity(self) -> None:
+        with pytest.raises(ValidationError, match="strictly ascending"):
+            SupplierPackage(
+                id="p",
+                material_id="x",
+                supplier_id="y",
+                weight_kg=Decimal("1.0"),
+                price_incl_vat=Decimal("1.0"),
+                bundle_discounts=[
+                    BundleDiscount(min_quantity=4, discount_pct=Decimal("0.05")),
+                    BundleDiscount(min_quantity=2, discount_pct=Decimal("0.10")),
+                ],
+            )
+
+    def test_rejects_bundle_tiers_with_non_increasing_discount(self) -> None:
+        with pytest.raises(ValidationError, match="strictly ascending"):
+            SupplierPackage(
+                id="p",
+                material_id="x",
+                supplier_id="y",
+                weight_kg=Decimal("1.0"),
+                price_incl_vat=Decimal("1.0"),
+                bundle_discounts=[
+                    BundleDiscount(min_quantity=2, discount_pct=Decimal("0.10")),
+                    BundleDiscount(min_quantity=4, discount_pct=Decimal("0.10")),
+                ],
+            )
+
+
+class TestBundleDiscount:
+    def test_rejects_a_min_quantity_below_two(self) -> None:
+        with pytest.raises(ValidationError, match="greater than or equal to 2"):
+            BundleDiscount(min_quantity=1, discount_pct=Decimal("0.05"))
+
+    def test_rejects_a_discount_pct_at_or_above_one(self) -> None:
+        with pytest.raises(ValidationError, match="less than 1"):
+            BundleDiscount(min_quantity=2, discount_pct=Decimal("1.0"))
+
+    def test_rejects_a_zero_discount_pct(self) -> None:
+        with pytest.raises(ValidationError, match="greater than 0"):
+            BundleDiscount(min_quantity=2, discount_pct=Decimal("0"))

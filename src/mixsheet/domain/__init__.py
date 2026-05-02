@@ -21,6 +21,7 @@ from mixsheet.domain.calculator import (
     calculate_component,
 )
 from mixsheet.domain.catalog import (
+    BundleDiscount,
     Catalog,
     CatalogError,
     Material,
@@ -86,6 +87,7 @@ __all__ = [
     "AggregatedMaterial",
     "AggregatedMaterialSource",
     "AreaHeightVolume",
+    "BundleDiscount",
     "Catalog",
     "CatalogError",
     "CatalogTooBroadError",
