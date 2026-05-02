@@ -8,6 +8,7 @@ from decimal import Decimal
 import pytest
 
 from mixsheet.domain import (
+    BundleDiscount,
     Catalog,
     DirectVolume,
     Material,
@@ -44,13 +45,14 @@ def _supplier(supplier_id: str, name: str | None = None) -> Supplier:
     return Supplier(id=supplier_id, name=name or supplier_id.title())
 
 
-def _package(
+def _package(  # noqa: PLR0913
     *,
     pid: str,
     material_id: str,
     supplier_id: str,
     weight_kg: str,
     price_incl_vat: str,
+    bundle_discounts: list[BundleDiscount] | None = None,
 ) -> SupplierPackage:
     return SupplierPackage(
         id=pid,
@@ -58,7 +60,12 @@ def _package(
         supplier_id=supplier_id,
         weight_kg=Decimal(weight_kg),
         price_incl_vat=Decimal(price_incl_vat),
+        bundle_discounts=bundle_discounts or [],
     )
+
+
+def _tier(min_quantity: int, discount_pct: str) -> BundleDiscount:
+    return BundleDiscount(min_quantity=min_quantity, discount_pct=Decimal(discount_pct))
 
 
 def _catalog(
@@ -984,3 +991,275 @@ class TestAggregatorIntegration:
         assert cement.required_with_overage_kg == Decimal("22.00")
         assert sand.required_kg == Decimal("30.0")
         assert sand.required_with_overage_kg == Decimal("33.00")
+
+
+class TestBundleDiscountPricing:
+    def test_single_unit_ignores_all_tiers(self) -> None:
+        breakdown = _breakdown(
+            materials=[_aggregated(material_id="resin", name="Resin", weight_kg="20")],
+        )
+        catalog = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=[
+                _package(
+                    pid="resin-25",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="340.98",
+                    bundle_discounts=[_tier(2, "0.05")],
+                ),
+            ],
+        )
+
+        result = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        line_item = result.line_items[0]
+        assert line_item.allocations[0].count == 1
+        assert line_item.cost_incl_vat == Decimal("340.98")
+        assert result.suppliers[0].subtotal_incl_vat == Decimal("340.98")
+        assert result.total_cost_incl_vat == Decimal("340.98")
+
+    def test_threshold_quantity_applies_lowest_tier(self) -> None:
+        breakdown = _breakdown(
+            materials=[_aggregated(material_id="resin", name="Resin", weight_kg="40")],
+        )
+        catalog = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=[
+                _package(
+                    pid="resin-25",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="100.00",
+                    bundle_discounts=[_tier(2, "0.05")],
+                ),
+            ],
+        )
+
+        result = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        line_item = result.line_items[0]
+        assert line_item.allocations[0].count == 2
+        # 100.00 → 9500 cents discounted unit * 2 = €190.00.
+        assert line_item.cost_incl_vat == Decimal("190.00")
+        assert result.total_cost_incl_vat == Decimal("190.00")
+
+    def test_highest_qualifying_tier_wins(self) -> None:
+        breakdown = _breakdown(
+            materials=[_aggregated(material_id="resin", name="Resin", weight_kg="100")],
+        )
+        catalog = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=[
+                _package(
+                    pid="resin-25",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="340.98",
+                    bundle_discounts=[
+                        _tier(2, "0.05"),
+                        _tier(3, "0.10"),
+                        _tier(4, "0.15"),
+                    ],
+                ),
+            ],
+        )
+
+        result = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        line_item = result.line_items[0]
+        assert line_item.allocations[0].count == 4
+        # 340.98 → 28983 cents discounted unit (15% tier) * 4 = €1159.32.
+        assert line_item.cost_incl_vat == Decimal("1159.32")
+
+    def test_tiers_apply_per_package_independently(self) -> None:
+        breakdown = _breakdown(
+            materials=[
+                _aggregated(material_id="resin", name="Resin", weight_kg="100"),
+                _aggregated(material_id="hardener", name="Hardener", weight_kg="30"),
+            ],
+        )
+        catalog = _catalog(
+            materials=[
+                _material("resin", "Resin"),
+                _material("hardener", "Hardener"),
+            ],
+            suppliers=[_supplier("rg")],
+            packages=[
+                _package(
+                    pid="resin-25",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="340.98",
+                    bundle_discounts=[
+                        _tier(2, "0.05"),
+                        _tier(3, "0.10"),
+                        _tier(4, "0.15"),
+                    ],
+                ),
+                _package(
+                    pid="hardener-7-5",
+                    material_id="hardener",
+                    supplier_id="rg",
+                    weight_kg="7.5",
+                    price_incl_vat="100.00",
+                    bundle_discounts=[_tier(2, "0.05")],
+                ),
+            ],
+        )
+
+        result = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        resin = next(li for li in result.line_items if li.material_id == "resin")
+        hardener = next(li for li in result.line_items if li.material_id == "hardener")
+        assert resin.allocations[0].count == 4
+        assert hardener.allocations[0].count == 4
+        # resin: 28983 * 4 = €1159.32 (15% tier).
+        assert resin.cost_incl_vat == Decimal("1159.32")
+        # hardener: 9500 * 4 = €380.00 (5% tier — only one published).
+        assert hardener.cost_incl_vat == Decimal("380.00")
+        rg_subtotal = next(s for s in result.suppliers if s.supplier_id == "rg")
+        assert rg_subtotal.subtotal_incl_vat == Decimal("1539.32")
+        assert result.total_cost_incl_vat == Decimal("1539.32")
+
+    def test_determinism_under_discounts(self) -> None:
+        breakdown = _breakdown(
+            materials=[_aggregated(material_id="resin", name="Resin", weight_kg="100")],
+        )
+        catalog = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=[
+                _package(
+                    pid="resin-25",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="340.98",
+                    bundle_discounts=[
+                        _tier(2, "0.05"),
+                        _tier(3, "0.10"),
+                        _tier(4, "0.15"),
+                    ],
+                ),
+                _package(
+                    pid="resin-5",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="5",
+                    price_incl_vat="80.00",
+                    bundle_discounts=[_tier(2, "0.05")],
+                ),
+            ],
+        )
+
+        result_a = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+        result_b = optimize_purchase(
+            breakdown,
+            catalog,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        assert result_a == result_b
+
+    def test_discount_flips_cheapest_choice(self) -> None:
+        breakdown = _breakdown(
+            materials=[_aggregated(material_id="resin", name="Resin", weight_kg="30")],
+        )
+
+        def _packages(discount: list[BundleDiscount]) -> list[SupplierPackage]:
+            return [
+                _package(
+                    pid="big",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="25",
+                    price_incl_vat="30.00",
+                    bundle_discounts=discount,
+                ),
+                _package(
+                    pid="small",
+                    material_id="resin",
+                    supplier_id="rg",
+                    weight_kg="10",
+                    price_incl_vat="25.00",
+                ),
+            ]
+
+        # Baseline cheapest = big + small (35 kg @ €55). With 15% off the big
+        # at count = 2 the 2*big allocation drops to €51.00 and wins.
+        catalog_without_discount = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=_packages([]),
+        )
+        catalog_with_discount = _catalog(
+            materials=[_material("resin", "Resin")],
+            suppliers=[_supplier("rg")],
+            packages=_packages([_tier(2, "0.15")]),
+        )
+
+        baseline = optimize_purchase(
+            breakdown,
+            catalog_without_discount,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+        discounted = optimize_purchase(
+            breakdown,
+            catalog_with_discount,
+            strategy=Strategy.CHEAPEST,
+            overage_pct=Decimal("0"),
+            excluded_materials=[],
+        )
+
+        baseline_counts = {
+            alloc.package_id: alloc.count for alloc in baseline.line_items[0].allocations
+        }
+        discounted_counts = {
+            alloc.package_id: alloc.count for alloc in discounted.line_items[0].allocations
+        }
+        assert baseline_counts == {"big": 1, "small": 1}
+        assert baseline.total_cost_incl_vat == Decimal("55.00")
+        assert discounted_counts == {"big": 2}
+        assert discounted.total_cost_incl_vat == Decimal("51.00")

@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
     from mixsheet.domain.aggregator import ProjectBreakdown
-    from mixsheet.domain.catalog import Catalog, SupplierPackage
+    from mixsheet.domain.catalog import BundleDiscount, Catalog, SupplierPackage
 
 MG_PER_KG = Decimal("1000000")
 CENTS_PER_EUR = Decimal("100")
@@ -136,6 +136,42 @@ def _to_cents(eur: Decimal) -> int:
     return int((eur * CENTS_PER_EUR).to_integral_value(rounding=ROUND_HALF_UP))
 
 
+def _matching_tier(package: SupplierPackage, count: int) -> BundleDiscount | None:
+    """Return the highest qualifying ``BundleDiscount`` for ``count`` units.
+
+    Tiers on a package are stored in strictly ascending ``min_quantity``;
+    the last one whose threshold has been crossed wins.
+    """
+    matched: BundleDiscount | None = None
+    for tier in package.bundle_discounts:
+        if tier.min_quantity > count:
+            break
+        matched = tier
+    return matched
+
+
+def _discounted_price_cents(package: SupplierPackage, count: int) -> int:
+    """Return the integer cents for ``count`` units of ``package``.
+
+    Applies the highest matching :class:`BundleDiscount` tier, if any, by
+    rounding the discounted per-unit price half-up to the cent and
+    multiplying by ``count``. Keeps the optimizer's ranking arithmetic on
+    integer cents and deterministic across runs.
+    """
+    if count == 0:
+        return 0
+    base_cents = _to_cents(package.price_incl_vat)
+    tier = _matching_tier(package, count)
+    if tier is None:
+        return base_cents * count
+    discounted_unit_cents = int(
+        (Decimal(base_cents) * (Decimal("1") - tier.discount_pct)).to_integral_value(
+            rounding=ROUND_HALF_UP,
+        ),
+    )
+    return discounted_unit_cents * count
+
+
 def _candidates_for(material_id: str, catalog: Catalog) -> list[_PackageCandidate]:
     """Return the deterministic candidate list for one material.
 
@@ -171,11 +207,19 @@ def _enumerate_allocations(
     max_package_weight_mg`` is pruned: such an allocation is dominated
     by one with a single package removed (which is still feasible and
     strictly cheaper under every strategy).
+
+    Per-package costs come from :func:`_discounted_price_cents` so any
+    ``BundleDiscount`` tier on a package is reflected in the candidate's
+    ``cost_cents``.
     """
     n = len(candidates)
     n_max = [math.ceil(required_mg / c.weight_mg) + 1 for c in candidates]
     max_package_weight = max(c.weight_mg for c in candidates)
     weight_cap = required_mg + max_package_weight
+    cost_table = [
+        [_discounted_price_cents(c.package, k) for k in range(n_max[i] + 1)]
+        for i, c in enumerate(candidates)
+    ]
 
     def dfs(
         idx: int,
@@ -199,7 +243,7 @@ def _enumerate_allocations(
             yield from dfs(
                 idx + 1,
                 partial_weight + k * candidate.weight_mg,
-                partial_cost + k * candidate.price_cents,
+                partial_cost + cost_table[idx][k],
                 counts,
             )
             counts.pop()
@@ -277,10 +321,7 @@ def _build_line_item(  # noqa: PLR0913
         (alloc.package_weight_kg * alloc.count for alloc in chosen),
         start=Decimal("0"),
     )
-    cost_incl_vat = sum(
-        (alloc.package_price_incl_vat * alloc.count for alloc in chosen),
-        start=Decimal("0"),
-    )
+    cost_incl_vat = Decimal(allocation.cost_cents) / CENTS_PER_EUR
     waste_kg = purchased_kg - required_with_overage_kg
     return PurchaseLineItem(
         material_id=material_id,
@@ -294,19 +335,27 @@ def _build_line_item(  # noqa: PLR0913
     )
 
 
-def _supplier_subtotals(line_items: list[PurchaseLineItem]) -> list[SupplierSubtotal]:
-    """Aggregate allocations into per-supplier subtotals sorted by supplier id."""
+def _supplier_subtotals(
+    line_items: list[PurchaseLineItem],
+    package_lookup: dict[str, SupplierPackage],
+) -> list[SupplierSubtotal]:
+    """Aggregate allocations into per-supplier subtotals sorted by supplier id.
+
+    ``package_lookup`` resolves an allocation's ``package_id`` back to its
+    catalog ``SupplierPackage`` so any ``BundleDiscount`` tier is applied
+    to the per-allocation contribution before it is rolled up.
+    """
     cost_by_supplier: dict[str, Decimal] = {}
     count_by_supplier: dict[str, int] = {}
     for line_item in line_items:
         for allocation in line_item.allocations:
             supplier_id = allocation.supplier_id
+            package = package_lookup[allocation.package_id]
+            allocation_cost = (
+                Decimal(_discounted_price_cents(package, allocation.count)) / CENTS_PER_EUR
+            )
             cost_by_supplier[supplier_id] = (
-                cost_by_supplier.get(
-                    supplier_id,
-                    Decimal("0"),
-                )
-                + allocation.package_price_incl_vat * allocation.count
+                cost_by_supplier.get(supplier_id, Decimal("0")) + allocation_cost
             )
             count_by_supplier[supplier_id] = (
                 count_by_supplier.get(supplier_id, 0) + allocation.count
@@ -376,7 +425,8 @@ def optimize_purchase(
             ),
         )
 
-    suppliers = _supplier_subtotals(line_items)
+    package_lookup = {pkg.id: pkg for pkg in catalog.packages}
+    suppliers = _supplier_subtotals(line_items, package_lookup)
     total_cost_incl_vat = sum(
         (line_item.cost_incl_vat for line_item in line_items),
         start=Decimal("0"),

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Catalog prices realigned with current supplier listings: `epoxy-resin-25kg` €341.21 → €340.98; `hardener-gl2-20kg` €404.97 → €404.87.
+- Optimizer now applies the highest matching `BundleDiscount` tier to each `(package, count)` pair when scoring an allocation; `PurchaseLineItem.cost_incl_vat`, `SupplierSubtotal.subtotal_incl_vat`, and `PurchaseList.total_cost_incl_vat` reflect discounted prices, and `cheapest`/`bulk_value` rank against discounted cost.
 
 ### Removed
 
