@@ -1,6 +1,6 @@
 # Mix Sheet — Suppliers & Packages catalog
 # Prices are gross (incl. VAT). Weights are always in kg.
-catalog_version: "2026-05-01"
+catalog_version: "2026-05-06"
 
 suppliers:
   - id: moertelshop
@@ -58,6 +58,62 @@ packages:
     weight_kg: 25.0
     price_incl_vat: 52.40
     product_url: https://www.moertelshop.com/buy-refractory-aggregate-cheaply_15
+
+  - id: basalt-sand-0-2-5kg
+    material_id: basalt-sand-0-2
+    supplier_id: moertelshop
+    weight_kg: 5.0
+    price_incl_vat: 22.80
+    product_url: https://www.moertelshop.com/buy-basalt-sand-cheaply_5
+
+  - id: basalt-sand-0-2-25kg
+    material_id: basalt-sand-0-2
+    supplier_id: moertelshop
+    weight_kg: 25.0
+    price_incl_vat: 45.50
+    product_url: https://www.moertelshop.com/buy-basalt-sand-cheaply_5
+
+  - id: basalt-sand-0-2-300kg
+    material_id: basalt-sand-0-2
+    supplier_id: moertelshop
+    weight_kg: 300.0
+    price_incl_vat: 500.00
+    product_url: https://www.moertelshop.com/buy-basalt-sand-cheaply_5
+
+  - id: basalt-sand-0-2-900kg
+    material_id: basalt-sand-0-2
+    supplier_id: moertelshop
+    weight_kg: 900.0
+    price_incl_vat: 1410.00
+    product_url: https://www.moertelshop.com/buy-basalt-sand-cheaply_5
+
+  - id: basalt-2-5-5kg
+    material_id: basalt-2-5
+    supplier_id: moertelshop
+    weight_kg: 5.0
+    price_incl_vat: 19.00
+    product_url: https://www.moertelshop.com/buy-basalt-chippings-cheaply_5
+
+  - id: basalt-2-5-25kg
+    material_id: basalt-2-5
+    supplier_id: moertelshop
+    weight_kg: 25.0
+    price_incl_vat: 36.60
+    product_url: https://www.moertelshop.com/buy-basalt-chippings-cheaply_5
+
+  - id: basalt-2-5-300kg
+    material_id: basalt-2-5
+    supplier_id: moertelshop
+    weight_kg: 300.0
+    price_incl_vat: 401.50
+    product_url: https://www.moertelshop.com/buy-basalt-chippings-cheaply_5
+
+  - id: basalt-2-5-900kg
+    material_id: basalt-2-5
+    supplier_id: moertelshop
+    weight_kg: 900.0
+    price_incl_vat: 1144.00
+    product_url: https://www.moertelshop.com/buy-basalt-chippings-cheaply_5
 
   - id: cement-5kg
     material_id: cement

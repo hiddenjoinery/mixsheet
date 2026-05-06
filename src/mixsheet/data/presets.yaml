@@ -1,10 +1,14 @@
 # Mix Sheet — Materials & Mix Presets catalog
 # All proportions are mass fractions and MUST sum to 1.0000 per preset.
-catalog_version: "2026-05-01"
+catalog_version: "2026-05-06"
 
 materials:
   - id: aeropor
     name: Aeropor light aggregate
+    category: aggregate
+
+  - id: basalt-2-5
+    name: Crushed basalt 2-5 mm
     category: aggregate
 
   - id: durigid-0-1
@@ -28,12 +32,16 @@ materials:
     category: additive
 
   - id: cement
-    name: Cement / Nanodur
+    name: Cement / Nanodur / TEGNO
     category: binder
 
   - id: pce-375
     name: PCE 375 superplasticizer
     category: additive
+
+  - id: basalt-sand-0-2
+    name: Basalt sand 0.5-2 mm
+    category: aggregate
 
   - id: water
     name: Water
@@ -80,11 +88,11 @@ presets:
         proportion: 0.0400
 
   - id: uhpc-mix
-    name: Ultra-High Performance Concrete
-    version: "1.0.0"
+    name: UHPC High Stiffness (E80)
+    version: "1.1.0"
     density_kg_per_l: 2.78
-    description: Cement-based UHPC mix for parts that require very high strength, surface hardness, and dimensional stability.
-    application: Load-bearing parts, Base plates, Structural joints, High stiffness
+    description: UHPC with industrial high-modulus aggregate (Durigid). E-modulus ~80 GPa, minimal deformation under preloaded fasteners. Use where linear guides or precision fixtures demand the lowest compliance.
+    application: Linear guide rails, Precision fixtures, Spindle mounts, Highest stiffness
     materials:
       - material_id: cement
         proportion: 0.3698
@@ -96,6 +104,24 @@ presets:
         proportion: 0.0525
       - material_id: pce-375
         proportion: 0.0060
+
+  - id: uhpc-mix-standard
+    name: UHPC Standard (E45)
+    version: "1.0.0"
+    density_kg_per_l: 2.47
+    description: Industry-standard UHPC for machine bases (Sagmeister/Pagel TEGNO recipe). Basalt sand and crushed basalt as aggregate. E-modulus ~45 GPa with substantially cheaper aggregate than the high-stiffness variant — the default choice for machine bodies and base plates.
+    application: Machine bases, Base plates, Bed castings, General-purpose UHPC
+    materials:
+      - material_id: cement
+        proportion: 0.4127
+      - material_id: basalt-sand-0-2
+        proportion: 0.1692
+      - material_id: basalt-2-5
+        proportion: 0.3467
+      - material_id: water
+        proportion: 0.0660
+      - material_id: pce-375
+        proportion: 0.0054
 
   - id: pure-epoxy-low-volume
     name: Pure epoxy
